@@ -1,0 +1,205 @@
+/* Reset básico e estilos gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+  }
+
+:root{
+    --primary: #050E5A;
+    --secundary: #062763;
+    --tertiary: #D9D9D9;
+}
+  
+  body {
+    background-color: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  /* Cabeçalho/Título */
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color:black;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Container dos botões */
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  /* Estilo dos botões */
+  .menu-button {
+    background-color: var(--secundary);
+    color: var(--tertiary);
+    border:black;
+    padding: 1.2rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .menu-button:hover {
+    background-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .menu-button:active {
+    background-color: var(--primary);
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  /* Responsividade */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    
+    .menu-button {
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+
+  .relative-logo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 80px; /* Ajuste conforme necessário */
+    height: auto; /* Mantém a proporção da imagem */
+    z-index: 100; /* Garante que fique acima de outros elementos */
+  }
+
+
+  /*  PAGINAS SECUNDARIAS - CAIXAS DE ENTRADA*/
+
+/* ESTILOS BASE COMUNS A TODAS AS CAIXAS */
+.caixa-torneio,
+.caixa-partida,
+.caixa-jogador {
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para os inputs  */
+.caixa-torneio .entrada,
+.caixa-partida .entrada,
+.caixa-jogador .entrada {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 2px solid;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+/* Estilos para os botões  */
+.caixa-torneio .submeter,
+.caixa-partida .submeter,
+.caixa-jogador .submeter {
+  width: 100%;
+  padding: 12px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+/* Efeitos de foco  */
+.caixa-torneio .entrada:focus,
+.caixa-partida .entrada:focus,
+.caixa-jogador .entrada:focus {
+  outline: none;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeitos hover botão */
+.caixa-torneio .submeter:hover,
+.caixa-partida .submeter:hover,
+.caixa-jogador .submeter:hover {
+  filter: brightness(90%);
+}
+
+/* LABELS  */
+.caixa-torneio label,
+.caixa-partida label,
+.caixa-jogador label {
+  display: block;
+  margin-bottom: 5px;
+  color: white;
+  font-weight: bold;
+}
+
+/* PERSONALIZAÇÕES DAS CAIXAS DE ENTRADA E SAIDA */
+
+.caixa-torneio, .caixa-jogador, .caixa-torneio {
+  background-color: var(--primary);
+}
+.caixa-torneio .entrada, .caixa-torneio, .caixa-jogador, .caixa-torneio {
+  border-color: var(--primary);
+}
+.caixa-torneio .submeter, .caixa-torneio, .caixa-jogador, .caixa-torneio {
+  background-color: var(--tertiary);
+}
+.caixa-torneio .entrada:focus, .caixa-torneio, .caixa-jogador, .caixa-torneio {
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+
+/* RESPONSIVIDADE (comum) */
+@media (max-width: 600px) {
+  .caixa-torneio,
+  .caixa-partida,
+  .caixa-jogador {
+    padding: 20px;
+  }
+  
+  .caixa-torneio .entrada,
+  .caixa-partida .entrada,
+  .caixa-jogador .entrada,
+  .caixa-torneio .submeter,
+  .caixa-partida .submeter,
+  .caixa-jogador .submeter {
+    padding: 10px 12px;
+  }
+}
