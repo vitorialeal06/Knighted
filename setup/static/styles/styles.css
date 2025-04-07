@@ -6,14 +6,16 @@
     font-family: 'Inter', sans-serif;
   }
 
+
+
 :root{
     --primary: #050E5A;
     --secundary: #062763;
     --tertiary: #D9D9D9;
 }
-  
+ 
   body {
-    background-color: #f5f5f5;
+    background-color: #2d1818;
     color: #333;
     min-height: 100vh;
     display: flex;
