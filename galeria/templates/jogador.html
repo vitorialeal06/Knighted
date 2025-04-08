@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,7 +17,7 @@
 
 <body class="bg-primary text-white p-1">
     <div class ="relative-logo">
-        <img class="logo" src= "imagem.jpg" alt="logo Knighted" />
+        <img src="{% static 'logoKnighted.png' %}" alt="logo">
         <h1 class="container__titulo">Knighted</h1>
     </div>
 

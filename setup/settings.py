@@ -24,6 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -120,7 +121,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'setup/static')
+    os.path.join(BASE_DIR, 'setup/static'),
+    os.path.join(BASE_DIR, 'galeria/assets'),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
