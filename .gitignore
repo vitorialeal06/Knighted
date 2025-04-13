@@ -133,6 +133,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env.save
 .venv
 env/
 venv/
