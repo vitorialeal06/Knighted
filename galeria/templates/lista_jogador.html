@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Lista de Jogadores</title>
+</head>
+<body class="bg-primary text-white p-1">
+    <div class="container">
+
+                <!-- Adicione isso antes do conteúdo principal -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+
+        {% endif %}
+
+        <h1>Lista de Jogadores</h1>
+        <ul class="list-group">
+            {% for jogador in jogadores %}
+
+                <li class="list-group-item">
+                    {{ jogador.nome }} - {{ jogador.pais }} - Elo: {{ jogador.elo }} - Nascimento: {{ jogador.data_nascimento }}
+                </li>
+            {% empty %}
+                <li class="list-group-item">Nenhum jogador cadastrado.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'criar_jogador' %}" class="btn btn-light mt-3">Adicionar Novo Jogador</a>
+    </div>
+</body>
+</html>

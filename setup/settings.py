@@ -85,7 +85,9 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT', '5432'),
         'OPTIONS':{
-            'options':'-c search_path=knighted_schemas,public'
+            'client_encoding': 'UTF8',
+            'options': '-c lc_monetary=pt_BR.UTF-8 -c lc_numeric=pt_BR.UTF-8 -c lc_time=pt_BR.UTF-8',
+
         }
     }
 }
@@ -116,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'Brazil/East'
-
 USE_I18N = True
 
 USE_TZ = True

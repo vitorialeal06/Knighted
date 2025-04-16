@@ -1,18 +1,12 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+
 from django.db import models
 
 
 class Abertura(models.Model):
     id_abertura = models.AutoField(primary_key=True)
-    nome = models.TextField(blank=True, null=True)  # This field type is a guess.
-    movimento = models.TextField(blank=True, null=True)  # This field type is a guess.
-    descricao = models.TextField(blank=True, null=True)
+    nome = models.TextField(blank=False, null=True)  # This field type is a guess.
+    movimento = models.TextField(blank=False, null=True)  # This field type is a guess.
+    descricao = models.TextField(blank=False, null=True)
 
     class Meta:
         managed = False
@@ -135,10 +129,10 @@ class DjangoSession(models.Model):
 
 class Jogador(models.Model):
     id_jogador = models.AutoField(primary_key=True)
-    nome = models.CharField(max_length=100, blank=True, null=True)
-    data_nascimento = models.DateField(blank=True, null=True)
-    pais = models.CharField(max_length=25, blank=True, null=True)
-    elo = models.TextField(blank=True, null=True)  # This field type is a guess.
+    nome = models.CharField(max_length=100, blank=False, null=True)
+    data_nascimento = models.DateField(blank=False, null=True)
+    pais = models.CharField(max_length=25, blank=False, null=True)
+    elo = models.TextField(blank=False, null=True)  # This field type is a guess.
 
     class Meta:
         managed = False
@@ -163,6 +157,7 @@ class Partida(models.Model):
     id_abertura = models.ForeignKey(Abertura, models.DO_NOTHING, db_column='id_abertura', blank=True, null=True)
     data_partida = models.DateField(blank=True, null=True)
     duracao = models.DateTimeField(blank=True, null=True)
+    resultado = models.CharField(max_length=15, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -173,7 +168,7 @@ class Torneio(models.Model):
     nome_torneio = models.TextField(blank=True, null=True)  # This field type is a guess.
     localizacao = models.TextField(blank=True, null=True)  # This field type is a guess.
     data_inicio = models.DateField(blank=True, null=True)
-    date_fim = models.DateField(blank=True, null=True)
+    data_fim = models.DateField(blank=True, null=True)
     id_torneio = models.AutoField(primary_key=True)
 
     class Meta:

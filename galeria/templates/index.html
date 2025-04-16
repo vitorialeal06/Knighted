@@ -7,6 +7,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Knighted</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -19,25 +20,33 @@
 
   <body class="bg-primary text-white p-1">
   
-    <div class="d-flex justify-content-center img-fluid w-3 d-block mx-auto">
+    <div class="w-25 h-25 justify-content-center" >
       <img src="{% static 'logoKnighted.png' %}" alt="logo">
       
-    
     </div>
    
   
   
   <div class= "p-3 text-white-emphasis bg-dark border border-dark rounded-3
-  d-flex justify-content-center align-items-center">
+            d-flex justify-content-center align-items-center">
 
-    <img src="{% static 'logoKnighted.png' %}" alt="partida">
-    <a href="{% url 'partida' %}" class="menu-button">Ver Partidas</a>
+    <div class="px-3">
+      <a href="{% url 'partida' %}" class="btn btn-primary">
+        <i class="bi bi-1-circle me-2"></i> Cadastrar Partida
+      </a>
+    </div>
+    
+    <div class="px-3">
+      <a href="{% url 'torneio' %}" class="btn btn-primary">
+        <i class="bi bi-2-circle me-2"></i> Cadastrar Torneio
+      </a>
+    </div>  
 
-    <img src="imagem.png" alt="torneio">
-    <a href="{% url 'torneio' %}" class="menu-button">Torneio</a>
-
-    <img src="imagem.png" alt="jogador">
-    <a href="{% url 'jogador' %}" class="menu-button">Cadastrar Jogador</a>
+    <div class="px-3">
+      <a href="{% url 'jogador' %}" class="btn btn-primary">
+        <i class="bi bi-3-circle me-2"></i> Cadastrar Jogador
+      </a>
+    </div>
 
   </div>
   

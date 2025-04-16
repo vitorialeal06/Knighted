@@ -1,10 +1,13 @@
 from django.conf import settings
+from django.contrib import admin
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 import os
 from galeria.views import index, partida, torneio, jogador
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('galeria.urls')),
     path('', index, name='index'),
     path('partida/', partida, name='partida'),
     path('torneio/', torneio, name='torneio'),
