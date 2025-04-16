@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path, include
 import os
-from galeria.views import index, partida, torneio, jogador
+from galeria.views import index, partida, torneio, jogador, abertura, movimento
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,6 +12,9 @@ urlpatterns = [
     path('partida/', partida, name='partida'),
     path('torneio/', torneio, name='torneio'),
     path('jogador/', jogador, name='jogador'),
+    path('abertura/', abertura, name='abertura'),
+    path('movimento/', movimento, name='movimento'),
+
 ]
 
 # Serve arquivos estáticos em desenvolvimento

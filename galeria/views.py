@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Jogador, Partida, Abertura, Torneio
+from .models import Jogador, Partida, Abertura, Torneio, Movimento
 from django.contrib import messages 
 from datetime import datetime
 
@@ -14,6 +14,12 @@ def torneio(request):
 
 def jogador(request):
     return render(request, 'jogador.html')
+
+def abertura(request):
+    return render(request, 'abertura.html')
+
+def movimento(request):
+    return render(request, 'movimento.html')
 
 
 def criar_jogador(request):
@@ -127,3 +133,69 @@ def criar_torneio(request):
 def lista_torneio(request):
     torneios = Torneio.objects.all()
     return render(request, 'lista_torneio.html', {'torneios': torneios})
+
+
+def criar_abertura(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        movimento = request.POST.get('movimento')
+        descricao = request.POST.get('descricao')
+        if nome and movimento and descricao:
+            try:
+                Abertura.objects.create(
+                    nome=nome,
+                    movimento=movimento,
+                    descricao=descricao
+                )
+                return redirect('abertura')
+            except Exception as e:
+                return render(request, 'abertura.html', {'error': f'Erro ao salvar: {str(e)}'})
+        else:
+            return render(request, 'abertura.html', {'error': 'Preencha todos os campos obrigatórios.'})
+    return render(request, 'abertura.html')
+
+def lista_abertura(request):
+    aberturas = Abertura.objects.all()
+    return render(request, 'lista_torneio.html', {'aberturas': aberturas})
+
+
+def criar_movimento(request):
+    if request.method == 'POST':
+        id_partida = request.POST.get('id_partida')
+        id_jogador = request.POST.get('id_jogador')
+        numero_jogada = request.POST.get('numero_jogada')
+        if id_partida and id_jogador and numero_jogada:
+            try:
+                Movimento.objects.create(
+                    id_partida_id=id_partida,
+                    id_jogador_id=id_jogador,
+                    numero_jogada=numero_jogada
+                )
+                return redirect('lista_movimentos')
+            except Exception as e:
+                partidas = Partida.objects.all()
+                jogadores = Jogador.objects.all()
+                return render(request, 'movimento.html', {
+                    'error': f'Erro ao salvar: {str(e)}',
+                    'partidas': partidas,
+                    'jogadores': jogadores
+                })
+        else:
+            partidas = Partida.objects.all()
+            jogadores = Jogador.objects.all()
+            return render(request, 'movimento.html', {
+                'error': 'Preencha todos os campos obrigatórios.',
+                'partidas': partidas,
+                'jogadores': jogadores
+            })
+    partidas = Partida.objects.all()
+    jogadores = Jogador.objects.all()
+    return render(request, 'movimento.html', {
+        'partidas': partidas,
+        'jogadores': jogadores
+    })
+
+def lista_movimento(request):
+    movimentos = Movimento.objects.all()
+    return render(request, 'lista_movimento.html', {'moviementos': movimentos})
+
