@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Jogador, Partida, Abertura, Torneio, Movimento
 from django.contrib import messages 
 from datetime import datetime
+from django.http import HttpResponseBadRequest
+
 
 def index(request): #retornar a pg
     return render(request, 'index.html')
@@ -43,7 +45,7 @@ def criar_jogador(request):
                     pais=pais,
                     elo=elo
                 )
-                return redirect('lista_jogadore')
+                return redirect('lista_jogador')
             except ValueError:
                 return render(request, 'jogador.html', {'error': 'Data de nascimento inválida.'})
             except Exception as e:
@@ -52,10 +54,19 @@ def criar_jogador(request):
             return render(request, 'jogador.html', {'error': 'Preencha todos os campos.'})
     return render(request, 'jogador.html')
 
-def lista_jogadores(request):
+def lista_jogador(request):
     jogadores = Jogador.objects.all()
     return render(request, 'lista_jogador.html', {'jogadores': jogadores})
 
+def remover_jogador(request):
+    if request.method == 'POST':
+        jogador_id = request.POST.get('jogador_id')
+        if not jogador_id:
+            return HttpResponseBadRequest("ID do jogador não fornecido")
+        jogador = get_object_or_404(Jogador, id_jogador=jogador_id)
+        jogador.delete()
+        return redirect('lista_jogador')
+    return HttpResponseBadRequest("Método não permitido")
 
 def criar_partida(request):
     if request.method == 'POST':
@@ -65,10 +76,10 @@ def criar_partida(request):
         data_partida = request.POST.get('data_partida')
         duracao = request.POST.get('duracao')
         resultado = request.POST.get('resultado')
-        if jogador_brancas_id and jogador_pretas_id and abertura_id and data_partida and resultado:
+        if jogador_brancas_id and jogador_pretas_id and abertura_id and data_partida and duracao and resultado:
             try:
                 data_partida = datetime.strptime(data_partida, '%Y-%m-%d').date()
-                duracao = datetime.strptime(duracao, '%Y-%m-%dT%H:%M') if duracao else None
+                duracao = datetime.strptime(duracao, 'T%H:%M:00') if duracao else None
                 Partida.objects.create(
                     id_jogador_brancas_id=jogador_brancas_id,
                     id_jogador_pretas_id=jogador_pretas_id,
@@ -105,6 +116,18 @@ def lista_partida(request):
     partidas = Partida.objects.all()
     return render(request, 'lista_partida.html', {'partidas': partidas})
 
+
+def remover_partida(request):
+    if request.method == 'POST':
+        partida_id = request.POST.get('partida_id')
+        if not partida_id:
+            return HttpResponseBadRequest("ID da partida não fornecido")
+        partida = get_object_or_404(Partida, id_partida=partida_id)
+        partida.delete()
+        return redirect('lista_partida')
+    return HttpResponseBadRequest("Método não permitido")
+
+
 def criar_torneio(request):
     if request.method == 'POST':
         nome_torneio = request.POST.get('nome_torneio')
@@ -134,6 +157,16 @@ def lista_torneio(request):
     torneios = Torneio.objects.all()
     return render(request, 'lista_torneio.html', {'torneios': torneios})
 
+def remover_torneio(request):
+    if request.method == 'POST':
+        torneio_id = request.POST.get('torneio_id')
+        if not torneio_id:
+            return HttpResponseBadRequest("ID do torneio não fornecido")
+        torneio = get_object_or_404(Torneio, id_torneio=torneio_id)
+        torneio.delete()
+        messages.success(request, 'Torneio removido com sucesso.')
+        return redirect('lista_torneio')
+    return HttpResponseBadRequest("Método não permitido")
 
 def criar_abertura(request):
     if request.method == 'POST':
@@ -147,7 +180,7 @@ def criar_abertura(request):
                     movimento=movimento,
                     descricao=descricao
                 )
-                return redirect('abertura')
+                return redirect('lista_abertura')
             except Exception as e:
                 return render(request, 'abertura.html', {'error': f'Erro ao salvar: {str(e)}'})
         else:
@@ -156,7 +189,19 @@ def criar_abertura(request):
 
 def lista_abertura(request):
     aberturas = Abertura.objects.all()
-    return render(request, 'lista_torneio.html', {'aberturas': aberturas})
+    return render(request, 'lista_abertura.html', {'aberturas': aberturas})
+
+def remover_abertura(request):
+    if request.method == 'POST':
+        abertura_id = request.POST.get('abertura_id')
+        if not abertura_id:
+            return HttpResponseBadRequest("ID da abertura não fornecido")
+        abertura = get_object_or_404(Abertura, id_abertura=abertura_id)
+        Partida.objects.filter(id_abertura=abertura).delete()
+        abertura.delete()
+        messages.success(request, 'Abertura removida com sucesso.')
+        return redirect('lista_abertura')
+    return HttpResponseBadRequest("Método não permitido")
 
 
 def criar_movimento(request):
@@ -199,3 +244,17 @@ def lista_movimento(request):
     movimentos = Movimento.objects.all()
     return render(request, 'lista_movimento.html', {'moviementos': movimentos})
 
+
+def remover_movimento(request):
+    if request.method == 'POST':
+        movimento_id = request.POST.get('movimento_id')
+        if not movimento_id:
+            return HttpResponseBadRequest("ID do movimento não fornecido")
+        movimento = get_object_or_404(Movimento, id_movimento=movimento_id)
+        try:
+            movimento.delete()
+            messages.success(request, 'Movimento removido com sucesso.')
+        except Exception as e:
+            messages.error(request, f'Erro ao remover movimento: {str(e)}')
+        return redirect('lista_movimento')
+    return HttpResponseBadRequest("Método não permitido")

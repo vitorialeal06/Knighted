@@ -13,20 +13,30 @@
 </head>
 <body class="bg-primary text-white p-1">
     <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
         <h1>Lista de Partidas</h1>
         <ul class="list-group">
             {% for partida in partidas %}
-                <li class="list-group-item">
-                    {{ partida.id_jogador_brancas.nome }} (Brancas) vs {{ partida.id_jogador_pretas.nome }} (Pretas) - 
-                    Abertura: {{ partida.id_abertura.nome }} - Data: {{ partida.data_partida }} - 
-                    Resultado: {{ partida.resultado|default:"Não informado" }}
-                    {% if partida.duracao %} - Duração: {{ partida.duracao }}{% endif %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ partida.jogador_brancas.nome }} vs {{ partida.jogador_negras.nome }} - Data: {{ partida.data }} - Resultado: {{ partida.resultado }}
+                    <form method="post" action="{% url 'remover_partida' %}" class="remover-partida-form" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="partida_id" value="{{ partida.id }}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover esta partida?')">Remover</button>
+                    </form>
                 </li>
             {% empty %}
                 <li class="list-group-item">Nenhuma partida cadastrada.</li>
             {% endfor %}
         </ul>
-        <a href="{% url 'criar_partida' %}" class="btn btn-light mt-3">Cadastrar Nova Partida</a>
+        <a href="{% url 'criar_partida' %}" class="btn btn-light mt-3">Adicionar Nova Partida</a>
     </div>
 </body>
 </html>

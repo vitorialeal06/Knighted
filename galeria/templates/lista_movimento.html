@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,23 +13,30 @@
 </head>
 <body class="bg-primary text-white p-1">
     <div class="container">
-        <div class="img-fluid w-12 d-block mx-auto">
-            <img class="img-fluid w-8 d-block mx-auto" src="{% static 'Knighted_principal.png' %}" alt="logo">
-            <h1 class="container__titulo">Knighted</h1>
-        </div>
-        <h2>Lista de Movimentos</h2>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <h1>Lista de Movimentos</h1>
         <ul class="list-group">
             {% for movimento in movimentos %}
-                <li class="list-group-item">
-                    Partida: {{ movimento.id_partida.id_partida }}<br>
-                    Jogador: {{ movimento.id_jogador.nome }}<br>
-                    Número da Jogada: {{ movimento.numero_jogada }}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Partida: {{ movimento.id_partida }} - Notação: {{ movimento.notacao }} - Ordem: {{ movimento.ordem }}
+                    <form method="post" action="{% url 'remover_movimento' %}" class="remover-movimento-form" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="movimento_id" value="{{ movimento.id_movimento }}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover o movimento {{ movimento.notacao }}?')">Remover</button>
+                    </form>
                 </li>
             {% empty %}
                 <li class="list-group-item">Nenhum movimento cadastrado.</li>
             {% endfor %}
         </ul>
-        <a href="{% url 'criar_movimento' %}" class="btn btn-light mt-3">Cadastrar Novo Movimento</a>
+        <a href="{% url 'criar_movimento' %}" class="btn btn-light mt-3">Adicionar Novo Movimento</a>
     </div>
 </body>
 </html>

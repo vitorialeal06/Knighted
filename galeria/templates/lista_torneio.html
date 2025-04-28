@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,23 +13,30 @@
 </head>
 <body class="bg-primary text-white p-1">
     <div class="container">
-        <div class="img-fluid w-12 d-block mx-auto">
-            <img class="img-fluid w-8 d-block mx-auto" src="{% static 'logoKnighted.png' %}" alt="logo">
-            <h1 class="container__titulo">Knighted</h1>
-        </div>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
-        <h2>Lista de Torneios</h2>
+        <h1>Lista de Torneios</h1>
         <ul class="list-group">
             {% for torneio in torneios %}
-                <li class="list-group-item">
-                    {{ torneio.nome_torneio }} - {{ torneio.localizacao }} - 
-                    De {{ torneio.data_inicio }} até {{ torneio.data_fim }}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ torneio.nome_torneio }} - {{ torneio.localizacao }} - Início: {{ torneio.data_inicio|date:"d/m/Y" }} - Fim: {{ torneio.data_fim|date:"d/m/Y" }}
+                    <form method="post" action="{% url 'remover_torneio' %}" class="remover-torneio-form" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="torneio_id" value="{{ torneio.id_torneio }}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover {{ torneio.nome_torneio }}?')">Remover</button>
+                    </form>
                 </li>
             {% empty %}
                 <li class="list-group-item">Nenhum torneio cadastrado.</li>
             {% endfor %}
         </ul>
-        <a href="{% url 'criar_torneio' %}" class="btn btn-light mt-3">Cadastrar Novo Torneio</a>
+        <a href="{% url 'criar_torneio' %}" class="btn btn-light mt-3">Adicionar Novo Torneio</a>
     </div>
 </body>
 </html>

@@ -156,7 +156,7 @@ class Partida(models.Model):
     id_jogador_pretas = models.ForeignKey(Jogador, models.DO_NOTHING, db_column='id_jogador_pretas', related_name='partida_id_jogador_pretas_set', blank=True, null=True)
     id_abertura = models.ForeignKey(Abertura, models.DO_NOTHING, db_column='id_abertura', blank=True, null=True)
     data_partida = models.DateField(blank=True, null=True)
-    duracao = models.DateTimeField(blank=True, null=True)
+    duracao = models.DurationField(blank=True, null=True)
     resultado = models.CharField(max_length=15, blank=True, null=True)
 
     class Meta:
