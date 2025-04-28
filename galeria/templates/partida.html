@@ -59,7 +59,13 @@
             <input class="form-control bg-white rounded-3 p-2" type="date" name="data_partida" id="data_partida" required>
 
             <label for="duracao">Duração:</label>
-            <input class="form-control bg-white rounded-3 p-2" type="text" name="duracao" id="duracao">
+            <select class="form-control bg-white rounded-3 p-2" name="duracao" id="duracao" required>
+                <option value="" disabled selected>Selecione...</option>
+                <option value="empate">Blitz - 3 minutos</option>
+                <option value="pretas">Rapid - 10 minutos</option>
+                <option value="brancas">Classic - 2 horas</option>
+            </select>
+
 
             <label for="resultado">Resultado:</label>
             <select class="form-control bg-white rounded-3 p-2" name="resultado" id="resultado" required>

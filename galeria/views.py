@@ -79,7 +79,7 @@ def criar_partida(request):
         if jogador_brancas_id and jogador_pretas_id and abertura_id and data_partida and duracao and resultado:
             try:
                 data_partida = datetime.strptime(data_partida, '%Y-%m-%d').date()
-                duracao = datetime.strptime(duracao, 'T%H:%M:00') if duracao else None
+                
                 Partida.objects.create(
                     id_jogador_brancas_id=jogador_brancas_id,
                     id_jogador_pretas_id=jogador_pretas_id,
