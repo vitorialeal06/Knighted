@@ -1,24 +1,30 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Jogador, Partida, Abertura, Torneio, Movimento
-from django.contrib import messages 
-from datetime import datetime
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseBadRequest
+from django.contrib import messages
+from datetime import datetime
+from django.db import models
+from .models import Jogador, Partida, Torneio, Abertura, Movimento
 
 
-def index(request): #retornar a pg
+def index(request):
     return render(request, 'index.html')
+
 
 def partida(request):
     return render(request, 'partida.html')
 
+
 def torneio(request):
     return render(request, 'torneio.html')
+
 
 def jogador(request):
     return render(request, 'jogador.html')
 
+
 def abertura(request):
     return render(request, 'abertura.html')
+
 
 def movimento(request):
     return render(request, 'movimento.html')
@@ -30,8 +36,6 @@ def criar_jogador(request):
         nascimento = request.POST.get('nascimento')
         pais = request.POST.get('pais')
         elo = request.POST.get('elo')
-
-        # Validação
         if nome and nascimento and pais and elo:
             if len(nome) > 100:
                 return render(request, 'jogador.html', {'error': 'Nome muito longo (máx. 100 caracteres).'})
@@ -54,9 +58,11 @@ def criar_jogador(request):
             return render(request, 'jogador.html', {'error': 'Preencha todos os campos.'})
     return render(request, 'jogador.html')
 
+
 def lista_jogador(request):
     jogadores = Jogador.objects.all()
     return render(request, 'lista_jogador.html', {'jogadores': jogadores})
+
 
 def remover_jogador(request):
     if request.method == 'POST':
@@ -67,6 +73,7 @@ def remover_jogador(request):
         jogador.delete()
         return redirect('lista_jogador')
     return HttpResponseBadRequest("Método não permitido")
+
 
 def criar_partida(request):
     if request.method == 'POST':
@@ -79,7 +86,6 @@ def criar_partida(request):
         if jogador_brancas_id and jogador_pretas_id and abertura_id and data_partida and duracao and resultado:
             try:
                 data_partida = datetime.strptime(data_partida, '%Y-%m-%d').date()
-                
                 Partida.objects.create(
                     id_jogador_brancas_id=jogador_brancas_id,
                     id_jogador_pretas_id=jogador_pretas_id,
@@ -111,6 +117,7 @@ def criar_partida(request):
         'jogadores': Jogador.objects.all(),
         'aberturas': Abertura.objects.all()
     })
+
 
 def lista_partida(request):
     partidas = Partida.objects.all()
@@ -153,9 +160,11 @@ def criar_torneio(request):
             return render(request, 'torneio.html', {'error': 'Preencha todos os campos.'})
     return render(request, 'torneio.html')
 
+
 def lista_torneio(request):
     torneios = Torneio.objects.all()
     return render(request, 'lista_torneio.html', {'torneios': torneios})
+
 
 def remover_torneio(request):
     if request.method == 'POST':
@@ -167,6 +176,7 @@ def remover_torneio(request):
         messages.success(request, 'Torneio removido com sucesso.')
         return redirect('lista_torneio')
     return HttpResponseBadRequest("Método não permitido")
+
 
 def criar_abertura(request):
     if request.method == 'POST':
@@ -187,9 +197,11 @@ def criar_abertura(request):
             return render(request, 'abertura.html', {'error': 'Preencha todos os campos obrigatórios.'})
     return render(request, 'abertura.html')
 
+
 def lista_abertura(request):
     aberturas = Abertura.objects.all()
     return render(request, 'lista_abertura.html', {'aberturas': aberturas})
+
 
 def remover_abertura(request):
     if request.method == 'POST':
@@ -216,7 +228,7 @@ def criar_movimento(request):
                     id_jogador_id=id_jogador,
                     numero_jogada=numero_jogada
                 )
-                return redirect('lista_movimentos')
+                return redirect('lista_movimento')
             except Exception as e:
                 partidas = Partida.objects.all()
                 jogadores = Jogador.objects.all()
@@ -240,6 +252,7 @@ def criar_movimento(request):
         'jogadores': jogadores
     })
 
+
 def lista_movimento(request):
     movimentos = Movimento.objects.all()
     return render(request, 'lista_movimento.html', {'moviementos': movimentos})
@@ -258,3 +271,60 @@ def remover_movimento(request):
             messages.error(request, f'Erro ao remover movimento: {str(e)}')
         return redirect('lista_movimento')
     return HttpResponseBadRequest("Método não permitido")
+
+
+def relatorio_jogador(request, id_jogador):
+    jogador = get_object_or_404(Jogador, id_jogador=id_jogador)
+
+    # Busca partidas onde o jogador foi brancas ou pretas
+    partidas = Partida.objects.filter(
+        models.Q(id_jogador_brancas_id=id_jogador) | models.Q(id_jogador_pretas_id=id_jogador)
+    )
+    total_partidas = partidas.count()
+
+    # Conta vitórias, empates e derrotas
+    vitorias = 0
+    empates = 0
+    derrotas = 0
+    tempo_total = 0
+    for partida in partidas:
+        if partida.resultado == 'empate':
+            empates += 1
+        elif partida.resultado == 'brancas' and partida.id_jogador_brancas_id == id_jogador:
+            vitorias += 1
+        elif partida.resultado == 'pretas' and partida.id_jogador_pretas_id == id_jogador:
+            vitorias += 1
+        elif partida.resultado == 'brancas' and partida.id_jogador_pretas_id == id_jogador:
+            derrotas += 1
+        elif partida.resultado == 'pretas' and partida.id_jogador_brancas_id == id_jogador:
+            derrotas += 1
+        # Converte duração dos modos de jogo para minutos (assumindo valores como "3", "10", "120")
+        if partida.duracao and partida.duracao.isdigit():
+            tempo_total += int(partida.duracao)
+
+    # Calcular porcentagens
+    if total_partidas > 0:
+        porc_vitorias = (vitorias / total_partidas) * 100
+        porc_empates = (empates / total_partidas) * 100
+        porc_derrotas = (derrotas / total_partidas) * 100
+    else:
+        porc_vitorias = porc_empates = porc_derrotas = 0
+
+    # Converter duração
+    horas = tempo_total // 60
+    minutos = tempo_total % 60
+    tempo_formatado = f"{horas}h {minutos}min" if horas > 0 else f"{minutos}min"
+
+    context = {
+        'jogador': jogador,
+        'total_partidas': total_partidas,
+        'vitorias': vitorias,
+        'empates': empates,
+        'derrotas': derrotas,
+        'porc_vitorias': round(porc_vitorias, 2),
+        'porc_empates': round(porc_empates, 2),
+        'porc_derrotas': round(porc_derrotas, 2),
+        'tempo_total': tempo_formatado,
+    }
+
+    return render(request, 'relatorio_jogador.html', context)

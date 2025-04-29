@@ -12,13 +12,11 @@
     <title>Lista de Jogadores</title>
 </head>
 <body class="bg-primary text-white p-1">
-
-    <div class=" px-3">
+    <div class="px-3">
         <a href="{% url 'index' %}" class="btn btn-primary">
-          <i class="bi bi-arrow-left me-2"></i> Voltar
+            <i class="bi bi-arrow-left me-2"></i> Voltar
         </a>
     </div>
-
     <div class="container">
         {% if messages %}
         <ul class="messages">
@@ -27,17 +25,21 @@
             {% endfor %}
         </ul>
         {% endif %}
-
         <h1>Lista de Jogadores</h1>
         <ul class="list-group">
             {% for jogador in jogadores %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ jogador.nome }} - {{ jogador.pais }} - Elo: {{ jogador.elo }} - Nascimento: {{ jogador.data_nascimento }}
-                    <form method="post" action="{% url 'remover_jogador' %}" class="remover-jogador-form" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="jogador_id" value="{{ jogador.id_jogador }}">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover {{ jogador.nome }}?')">Remover</button>
-                    </form>
+                    <div>
+                        <!-- Botão de Relatório -->
+                        <a href="{% url 'relatorio_jogador' jogador.id_jogador %}" class="btn btn-info btn-sm me-2">Relatório</a>
+                        <!-- Botão de Remover -->
+                        <form method="post" action="{% url 'remover_jogador' %}" class="remover-jogador-form" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="jogador_id" value="{{ jogador.id_jogador }}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover {{ jogador.nome }}?')">Remover</button>
+                        </form>
+                    </div>
                 </li>
             {% empty %}
                 <li class="list-group-item">Nenhum jogador cadastrado.</li>
