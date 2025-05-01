@@ -328,3 +328,51 @@ def relatorio_jogador(request, id_jogador):
     }
 
     return render(request, 'relatorio_jogador.html', context)
+
+
+def relatorio_torneio(request, id_torneio):
+    torneio = get_object_or_404(Torneio, id_torneio=id_torneio)
+
+    # Filtra partidas no intervalo de datas do torneio
+    partidas = Partida.objects.filter(
+        data_partida__range=[torneio.data_inicio, torneio.data_fim]
+    )
+    total_partidas = partidas.count()
+
+    # Conta resultados
+    vitorias_brancas = partidas.filter(resultado='brancas').count()
+    vitorias_pretas = partidas.filter(resultado='pretas').count()
+    empates = partidas.filter(resultado='empate').count()
+
+    # Calcula tempo total
+    tempo_total = 0
+    for partida in partidas:
+        if partida.duracao and partida.duracao.isdigit():
+            tempo_total += int(partida.duracao)
+
+    # Formata o tempo total
+    horas = tempo_total // 60
+    minutos = tempo_total % 60
+    tempo_formatado = f"{horas}h {minutos}min" if horas > 0 else f"{minutos}min"
+
+    # Obtém jogadores únicos
+    jogadores_ids = set()
+    for partida in partidas:
+        if partida.id_jogador_brancas_id:
+            jogadores_ids.add(partida.id_jogador_brancas_id)
+        if partida.id_jogador_pretas_id:
+            jogadores_ids.add(partida.id_jogador_pretas_id)
+    jogadores = Jogador.objects.filter(id_jogador__in=jogadores_ids)
+
+    context = {
+        'torneio': torneio,
+        'total_partidas': total_partidas,
+        'vitorias_brancas': vitorias_brancas,
+        'vitorias_pretas': vitorias_pretas,
+        'empates': empates,
+        'tempo_total': tempo_formatado,
+        'jogadores': jogadores,
+        'total_jogadores': jogadores.count(),
+    }
+
+    return render(request, 'relatorio_torneio.html', context)

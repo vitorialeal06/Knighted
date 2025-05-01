@@ -26,4 +26,5 @@ urlpatterns = [
     path('Movimento/remover/', views.remover_movimento, name='remover_movimento'),
     # Nova URL para o relatório
     path('Jogador/relatorio/<int:id_jogador>/', views.relatorio_jogador, name='relatorio_jogador'),
+    path('Torneio/relatorio/<int:id_torneio>/', views.relatorio_torneio, name='relatorio_torneio'),
 ]

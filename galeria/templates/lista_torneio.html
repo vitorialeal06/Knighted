@@ -32,12 +32,14 @@
         <ul class="list-group">
             {% for torneio in torneios %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ torneio.nome_torneio }} - {{ torneio.localizacao }} - Início: {{ torneio.data_inicio|date:"d/m/Y" }} - Fim: {{ torneio.data_fim|date:"d/m/Y" }}
-                    <form method="post" action="{% url 'remover_torneio' %}" class="remover-torneio-form" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="torneio_id" value="{{ torneio.id_torneio }}">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover {{ torneio.nome_torneio }}?')">Remover</button>
-                    </form>
+                    <div>
+                        <a href="{% url 'relatorio_torneio' torneio.id_torneio %}" class="btn btn-info btn-sm me-2">Relatório</a>
+                        <form method="post" action="{% url 'remover_torneio' %}" class="remover-torneio-form" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="torneio_id" value="{{ torneio.id_torneio }}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover {{ torneio.nome_torneio }}?')">Remover</button>
+                        </form>
+                    </div>
                 </li>
             {% empty %}
                 <li class="list-group-item">Nenhum torneio cadastrado.</li>
