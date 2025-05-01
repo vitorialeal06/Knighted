@@ -32,7 +32,7 @@
         <ul class="list-group">
             {% for abertura in aberturas %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ abertura.nome }}
+                    {{ abertura.nome }} - Movimento: {{abertura.movimento}}
                     <form method="post" action="{% url 'remover_abertura' %}" class="remover-abertura-form" style="display:inline;">
                         {% csrf_token %}
                         <input type="hidden" name="abertura_id" value="{{ abertura.id_abertura }}">

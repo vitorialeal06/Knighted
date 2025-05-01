@@ -18,7 +18,6 @@
           <i class="bi bi-arrow-left me-2"></i> Voltar
         </a>
     </div>
-
     <div class="container">
         {% if messages %}
         <ul class="messages">
@@ -32,6 +31,7 @@
         <ul class="list-group">
             {% for torneio in torneios %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Torneio: {{torneio.nome_torneio}} - Local: {{torneio.localizacao}} - Inicio: {{torneio.data_inicio}} - Fim:{{torneio.data_fim}} 
                     <div>
                         <a href="{% url 'relatorio_torneio' torneio.id_torneio %}" class="btn btn-info btn-sm me-2">Relatório</a>
                         <form method="post" action="{% url 'remover_torneio' %}" class="remover-torneio-form" style="display:inline;">

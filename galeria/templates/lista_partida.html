@@ -34,7 +34,7 @@
         <ul class="list-group">
             {% for partida in partidas %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ partida.jogador_brancas.nome }} vs {{ partida.jogador_pretas.nome }} - Data: {{ partida.data }} - Duração {{partida.duracao}}  - Resultado: {{ partida.resultado }}
+                    {{ partida.jogador.nome }} vs {{ partida.jogador.nome }} - Data: {{ partida.data_partida}} - Duração: {{partida.duracao}}  - Resultado: {{ partida.resultado }}
                     <form method="post" action="{% url 'remover_partida' %}" class="remover-partida-form" style="display:inline;">
                         {% csrf_token %}
                         <input type="hidden" name="partida_id" value="{{ partida.id }}">
