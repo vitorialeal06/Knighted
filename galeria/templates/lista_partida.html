@@ -11,16 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <title>Lista de Partidas</title>
 </head>
-
-
 <body class="bg-primary text-white p-1">
-
-    <div class=" px-3">
+    <div class="px-3">
         <a href="{% url 'index' %}" class="btn btn-primary">
           <i class="bi bi-arrow-left me-2"></i> Voltar
         </a>
     </div>
-
     <div class="container">
         {% if messages %}
         <ul class="messages">
@@ -29,15 +25,14 @@
             {% endfor %}
         </ul>
         {% endif %}
-
         <h1>Lista de Partidas</h1>
         <ul class="list-group">
             {% for partida in partidas %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ partida.jogador.nome }} vs {{ partida.jogador.nome }} - Data: {{ partida.data_partida}} - Duração: {{partida.duracao}}  - Resultado: {{ partida.resultado }}
+                    {{ partida.id_jogador_brancas.nome }} ({{ partida.id_abertura_brancas.nome }}) vs {{ partida.id_jogador_pretas.nome }} ({{ partida.id_abertura_pretas.nome }}) - Data: {{ partida.data_partida|date:"d/m/Y" }} - Duração: {{ partida.duracao }} min - Resultado: {{ partida.resultado }}
                     <form method="post" action="{% url 'remover_partida' %}" class="remover-partida-form" style="display:inline;">
                         {% csrf_token %}
-                        <input type="hidden" name="partida_id" value="{{ partida.id }}">
+                        <input type="hidden" name="partida_id" value="{{ partida.id_partida }}">
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover esta partida?')">Remover</button>
                     </form>
                 </li>

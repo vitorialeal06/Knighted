@@ -79,17 +79,19 @@ def criar_partida(request):
     if request.method == 'POST':
         jogador_brancas_id = request.POST.get('jogador_brancas')
         jogador_pretas_id = request.POST.get('jogador_pretas')
-        abertura_id = request.POST.get('abertura')
+        abertura_brancas_id = request.POST.get('abertura_brancas')
+        abertura_pretas_id = request.POST.get('abertura_pretas')
         data_partida = request.POST.get('data_partida')
         duracao = request.POST.get('duracao')
         resultado = request.POST.get('resultado')
-        if jogador_brancas_id and jogador_pretas_id and abertura_id and data_partida and duracao and resultado:
+        if jogador_brancas_id and jogador_pretas_id and abertura_brancas_id and abertura_pretas_id and data_partida and duracao and resultado:
             try:
                 data_partida = datetime.strptime(data_partida, '%Y-%m-%d').date()
                 Partida.objects.create(
                     id_jogador_brancas_id=jogador_brancas_id,
                     id_jogador_pretas_id=jogador_pretas_id,
-                    id_abertura_id=abertura_id,
+                    id_abertura_brancas_id=abertura_brancas_id,
+                    id_abertura_pretas_id=abertura_pretas_id,
                     data_partida=data_partida,
                     duracao=duracao,
                     resultado=resultado
@@ -209,7 +211,8 @@ def remover_abertura(request):
         if not abertura_id:
             return HttpResponseBadRequest("ID da abertura não fornecido")
         abertura = get_object_or_404(Abertura, id_abertura=abertura_id)
-        Partida.objects.filter(id_abertura=abertura).delete()
+        Partida.objects.filter(id_abertura_brancas=abertura).delete()
+        Partida.objects.filter(id_abertura_pretas=abertura).delete()
         abertura.delete()
         messages.success(request, 'Abertura removida com sucesso.')
         return redirect('lista_abertura')
@@ -276,13 +279,11 @@ def remover_movimento(request):
 def relatorio_jogador(request, id_jogador):
     jogador = get_object_or_404(Jogador, id_jogador=id_jogador)
 
-    # Busca partidas onde o jogador foi brancas ou pretas
     partidas = Partida.objects.filter(
         models.Q(id_jogador_brancas_id=id_jogador) | models.Q(id_jogador_pretas_id=id_jogador)
     )
     total_partidas = partidas.count()
 
-    # Conta vitórias, empates e derrotas
     vitorias = 0
     empates = 0
     derrotas = 0
@@ -298,11 +299,9 @@ def relatorio_jogador(request, id_jogador):
             derrotas += 1
         elif partida.resultado == 'pretas' and partida.id_jogador_brancas_id == id_jogador:
             derrotas += 1
-        # Converte duração dos modos de jogo para minutos (assumindo valores como "3", "10", "120")
         if partida.duracao and partida.duracao.isdigit():
             tempo_total += int(partida.duracao)
 
-    # Calcular porcentagens
     if total_partidas > 0:
         porc_vitorias = (vitorias / total_partidas) * 100
         porc_empates = (empates / total_partidas) * 100
@@ -310,7 +309,6 @@ def relatorio_jogador(request, id_jogador):
     else:
         porc_vitorias = porc_empates = porc_derrotas = 0
 
-    # Converter duração
     horas = tempo_total // 60
     minutos = tempo_total % 60
     tempo_formatado = f"{horas}h {minutos}min" if horas > 0 else f"{minutos}min"
@@ -333,29 +331,24 @@ def relatorio_jogador(request, id_jogador):
 def relatorio_torneio(request, id_torneio):
     torneio = get_object_or_404(Torneio, id_torneio=id_torneio)
 
-    # Filtra partidas no intervalo de datas do torneio
     partidas = Partida.objects.filter(
         data_partida__range=[torneio.data_inicio, torneio.data_fim]
     )
     total_partidas = partidas.count()
 
-    # Conta resultados
     vitorias_brancas = partidas.filter(resultado='brancas').count()
     vitorias_pretas = partidas.filter(resultado='pretas').count()
     empates = partidas.filter(resultado='empate').count()
 
-    # Calcula tempo total
     tempo_total = 0
     for partida in partidas:
         if partida.duracao and partida.duracao.isdigit():
             tempo_total += int(partida.duracao)
 
-    # Formata o tempo total
     horas = tempo_total // 60
     minutos = tempo_total % 60
     tempo_formatado = f"{horas}h {minutos}min" if horas > 0 else f"{minutos}min"
 
-    # Obtém jogadores únicos
     jogadores_ids = set()
     for partida in partidas:
         if partida.id_jogador_brancas_id:

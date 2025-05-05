@@ -15,7 +15,7 @@
     <form method="post" action="{% url 'criar_partida' %}">
         {% csrf_token %}
 
-        <div class=" px-3">
+        <div class="px-3">
             <a href="{% url 'index' %}" class="btn btn-primary">
               <i class="bi bi-arrow-left me-2"></i> Voltar
             </a>
@@ -23,7 +23,6 @@
 
         <div class="d-flex justify-content-center">
             <img src="{% static 'Knighted_logo.png' %}" alt="logo">
-           
         </div>
 
         <div class="p-3 text-white-emphasis bg-dark border border-dark rounded-3 d-flex justify-content-center d-flex flex-column gap-2">
@@ -47,25 +46,32 @@
                 {% endfor %}
             </select>
 
-            <label for="abertura">Abertura:</label>
-            <select class="form-control bg-white rounded-3 p-2" name="abertura" id="abertura" required>
+            <label for="abertura_brancas">Abertura (Brancas):</label>
+            <select class="form-control bg-white rounded-3 p-2" name="abertura_brancas" id="abertura_brancas" required>
                 <option value="" disabled selected>Selecione uma abertura</option>
                 {% for abertura in aberturas %}
                     <option value="{{ abertura.id_abertura }}">{{ abertura.nome }}</option>
                 {% endfor %}
             </select>
 
-            <label for="data_partida">Data da Partida:</label>  
+            <label for="abertura_pretas">Abertura (Pretas):</label>
+            <select class="form-control bg-white rounded-3 p-2" name="abertura_pretas" id="abertura_pretas" required>
+                <option value="" disabled selected>Selecione uma abertura</option>
+                {% for abertura in aberturas %}
+                    <option value="{{ abertura.id_abertura }}">{{ abertura.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="data_partida">Data da Partida:</label>
             <input class="form-control bg-white rounded-3 p-2" type="date" name="data_partida" id="data_partida" required>
 
             <label for="duracao">Duração:</label>
             <select class="form-control bg-white rounded-3 p-2" name="duracao" id="duracao" required>
                 <option value="" disabled selected>Selecione...</option>
-                <option value="empate">Blitz - 3 minutos</option>
-                <option value="pretas">Rapid - 10 minutos</option>
-                <option value="brancas">Classic - 2 horas</option>
+                <option value="3">Blitz - 3 minutos</option>
+                <option value="10">Rapid - 10 minutos</option>
+                <option value="120">Classic - 2 horas</option>
             </select>
-
 
             <label for="resultado">Resultado:</label>
             <select class="form-control bg-white rounded-3 p-2" name="resultado" id="resultado" required>
